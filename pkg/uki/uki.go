@@ -212,6 +212,11 @@ func (builder *Builder) writeUnsignedUKI() (string, error) {
 	}
 
 	outPath := builder.unsignedOutPath()
+	// The output path is the one the caller passed in --output, which is the
+	// whole point of the flag, so gosec G703 (path traversal from os.Args) has
+	// nothing to confine it to. The signed branch writes the same caller path
+	// through pesign.Sign.
+	// #nosec G703
 	if err := os.WriteFile(outPath, body, info.Mode()); err != nil {
 		return "", err
 	}
